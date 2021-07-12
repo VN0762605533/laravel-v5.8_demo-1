@@ -1,0 +1,121 @@
+body {
+    /*background-color: #B3E5FC;*/
+    border-radius: 10px
+}
+
+#profile-card .card {
+    width: 400px;
+    border: none;
+    border-radius: 10px;
+    background-color: #fff
+}
+
+#profile-content .card {
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    background-color: #fff
+}
+
+.stats {
+    background: #f2f5f8 !important;
+    color: #000 !important
+}
+
+.articles {
+    font-size: 10px;
+    color: #a1aab9
+}
+
+.number1 {
+    font-weight: 500
+}
+
+.followers {
+    font-size: 10px;
+    color: #a1aab9
+}
+
+.number2 {
+    font-weight: 500
+}
+
+.rating {
+    font-size: 10px;
+    color: #a1aab9
+}
+
+.number3 {
+    font-weight: 500
+}
+
+/*profile background*/
+ body {
+     font-family: 'Rubik', sans-serif;
+     height: 100% !important;
+ }
+
+ #star {
+     margin-left: -5px !important;
+     vertical-align: bottom !important;
+     opacity: 0.5
+ }
+
+ .more {
+     opacity: 0.5 !important
+ }
+
+ .btn:hover {
+     color: black !important
+ }
+
+ .vl {
+     margin: 8px !important;
+     width: 2px;
+     border-right: 1px solid #aaaaaa;
+     height: 25px
+ }
+
+ #plus {
+     opacity: 0.8
+ }
+
+ #profile-background .card-footer {
+     background-color: transparent !important;
+     background-color:transparent;
+ }
+
+ a:hover {
+     background-color: #ccc !important
+ }
+
+ .btn-outlined:active {
+     color: #FFF;
+     border-color: #fff !important
+ }
+
+ img {
+     cursor: pointer;
+     overflow: visible
+ }
+
+ .btn:focus,
+ .btn:active {
+     outline: none !important;
+     box-shadow: none !important
+ }
+
+.background-blur {
+	filter: blur(4px);
+	position: absolute;
+	width: 100%;
+}
+
+/*Background Blur using backdrop-filter*/
+.blur {
+  background: rgba(255, 255, 255, 0.6); /*// Make sure this color has an opacity of less than 1*/
+  backdrop-filter: blur(4px); /*// This be the blur*/
+  height: 100%;
+}
+
+/*content*/
