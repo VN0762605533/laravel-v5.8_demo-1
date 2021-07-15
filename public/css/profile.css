@@ -80,10 +80,28 @@ body {
      opacity: 0.8
  }
 
- #profile-background .card-footer {
-     background-color: transparent !important;
-     background-color:transparent;
- }
+#profile-background .card-footer {
+    background-color: transparent !important;
+    background-color:transparent;
+}
+
+#profile-background .card-body {
+    min-height: 200px;
+    background-image: url(../img/bg-profile.jpg);
+    /*background-attachment: fixed;*/
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    background-size: cover; /* Resize the background image to cover the entire container */
+}
+
+#profile-background {
+    background-image: url(../img/bg-profile.jpg);
+    height: 280px; /* You must set a specified height */
+    background-attachment: fixed;
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    background-size: cover; /* Resize the background image to cover the entire container */
+}
 
  a:hover {
      background-color: #ccc !important
@@ -94,19 +112,19 @@ body {
      border-color: #fff !important
  }
 
- img {
-     cursor: pointer;
-     overflow: visible
- }
+img {
+    cursor: pointer;
+    overflow: visible
+}
 
- .btn:focus,
- .btn:active {
-     outline: none !important;
-     box-shadow: none !important
- }
+.btn:focus,
+.btn:active {
+    outline: none !important;
+    box-shadow: none !important
+}
 
 .background-blur {
-	filter: blur(4px);
+	filter: blur(.1px);
 	position: absolute;
 	width: 100%;
 }
@@ -119,3 +137,35 @@ body {
 }
 
 /*content*/
+
+/*gallery*/
+.image-container .image-story{
+    width: 95%;
+    height: 95%;
+}
+
+.d-pr-pl {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+}
+
+.option-gallery{
+    position: fixed;
+    top: 400px;
+    right: 3%;
+}
+
+.option-item {
+    height: 35px;
+    width: 35px;
+    font-size: 35px;
+    margin-bottom: 1.2rem;
+    text-align: center;
+    filter: blur(.8px);
+    color: rgba(33, 37, 41, 0.2);
+}
+
+.option-item.active {
+    color: rgba(33, 37, 41, 1);
+}
+/*end gallery*/
