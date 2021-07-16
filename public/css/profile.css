@@ -80,10 +80,28 @@ body {
      opacity: 0.8
  }
 
- #profile-background .card-footer {
-     background-color: transparent !important;
-     background-color:transparent;
- }
+#profile-background .card-footer {
+    background-color: transparent !important;
+    background-color:transparent;
+}
+
+#profile-background .card-body {
+    min-height: 200px;
+    background-image: url(../img/bg-profile.jpg);
+    /*background-attachment: fixed;*/
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    background-size: cover; /* Resize the background image to cover the entire container */
+}
+
+#profile-background {
+    background-image: url(../img/bg-profile.jpg);
+    height: 280px; /* You must set a specified height */
+    background-attachment: fixed;
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    background-size: cover; /* Resize the background image to cover the entire container */
+}
 
  a:hover {
      background-color: #ccc !important
@@ -94,19 +112,19 @@ body {
      border-color: #fff !important
  }
 
- img {
-     cursor: pointer;
-     overflow: visible
- }
+img {
+    cursor: pointer;
+    overflow: visible
+}
 
- .btn:focus,
- .btn:active {
-     outline: none !important;
-     box-shadow: none !important
- }
+.btn:focus,
+.btn:active {
+    outline: none !important;
+    box-shadow: none !important
+}
 
 .background-blur {
-	filter: blur(4px);
+	filter: blur(.1px);
 	position: absolute;
 	width: 100%;
 }
@@ -119,3 +137,80 @@ body {
 }
 
 /*content*/
+
+/*gallery*/
+.image-container .image-story{
+    width: 95%;
+    height: 95%;
+}
+
+.d-pr-pl {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+}
+
+.option-gallery{
+    position: fixed;
+    top: 400px;
+    right: 3%;
+}
+
+.option-item {
+    height: 35px;
+    width: 35px;
+    font-size: 35px;
+    margin-bottom: 1.2rem;
+    text-align: center;
+    filter: blur(.8px);
+    /*color: rgba(33, 37, 41, 0.2);*/
+    color: #f2f5f8;
+    transition: transform 250ms;
+}
+
+.option-item.active {
+    color: rgba(33, 37, 41, 1);
+    filter: blur(0);
+}
+.option-item:hover {
+    color: rgba(33, 37, 41, 1);
+    filter: blur(0);
+}
+/*end gallery*/
+
+/* 2 */
+#create-diary a {
+  margin: 20px;
+  outline: none;
+}
+.custom-btn {
+  width: 400px;
+  height: 60px;
+  padding: 10px 25px;
+  border: 2px solid #212529;
+  font-family: 'Lato', sans-serif;
+  font-weight: 500;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  display: inline-block;
+}
+.btn-2 {
+  
+}
+.btn-2:after {
+  position: absolute;
+  content: "";
+  top: 10px;
+  left: 20px;
+  width: 90%;
+  height: 70%;
+  border: 1px solid #212529;
+  /*f2f5f8 */
+  /*212529*/
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+.btn-2:hover:after {
+  opacity: 1;
+}

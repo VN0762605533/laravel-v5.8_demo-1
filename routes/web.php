@@ -10,6 +10,15 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::group(['middleware' => 'checkLogin'], function () {
+    Route::get('/laravel-show', function(){
+      return View('filemanager');
+    });
+    Route::get('/laravel-filemanager', '\UniSharp\LaravelFilemanager\Controllers\LfmController@show');
+    Route::post('/laravel-filemanager/upload', '\UniSharp\LaravelFilemanager\Controllers\UploadController@upload');
+     
+    // list all lfm routes here...
+  });
 
 Route::get('/', function () {
     return view('home');
