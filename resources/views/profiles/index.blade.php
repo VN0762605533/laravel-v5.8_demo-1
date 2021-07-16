@@ -65,6 +65,11 @@
 					    </div>
 					</div>
 				</div>
+				<!-- button create diary -->
+				<div id="create-diary" class="container mt-5 d-flex justify-content-center">
+					<!-- <button class="btn btn-sm btn-outline-primary" style="width: 400px">Create diary</button>  -->
+					<a class="custom-btn btn-2" href="{{ url('/') }}"><i class="fas fa-plus"></i> &nbsp; Create diary</a>
+				</div>
 			</div>
 			<!--  -->
 			<!-- <div class="col-md-8">
