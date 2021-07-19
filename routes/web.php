@@ -20,9 +20,10 @@ Route::group(['middleware' => 'checkLogin'], function () {
     // list all lfm routes here...
   });
 
-Route::get('/', function () {
-    return view('home');
-});
+// Route::get('/', function () {
+//     return view('home');
+// });
+Route::get('/', 'DiaryController@index');
 /*------------------------auth------------------------*/
 ROUTE::get('/login', 'user\loginController@index');
 ROUTE::post('/login/store', 'user\loginController@store');
@@ -41,6 +42,8 @@ ROUTE::get('/reset', function() {
 /*---------------------end-auth---------------------*/
 /*profile*/
 ROUTE::get('/profile', 'user\profileController@index')->middleware('checkLogin');
+ROUTE::post('/stories/stored', 'diaryController@stored');
+
 /*end-profile*/
 /*--------------------stores------------------------*/
 ROUTE::get('/stores', 'storeController@index');

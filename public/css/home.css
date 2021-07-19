@@ -262,3 +262,54 @@
     padding-left: 25px;
   }
 }
+
+/**/
+/*.auth {
+	width: 36px;
+	height: 36px;
+	border: 2px;
+	border-radius: 100%;
+}*/
+
+.auth {
+	position: relative;
+	width: 72px;
+	height: 72px;
+}
+
+.auth:before {
+	content: "";
+	position:absolute;
+	  top:0;
+	  left:0;
+	  right:0;
+	  bottom:0;
+	  border-radius:100%; 
+	  padding: 4px; 
+	  background: linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%),
+            linear-gradient(127deg, rgba(0,255,0,.8), rgba(0,255,0,0) 70.71%),
+            linear-gradient(336deg, rgba(0,0,255,.8), rgba(0,0,255,0) 70.71%);
+	  -webkit-mask: 
+	     linear-gradient(#fff 0 0) content-box, 
+	     linear-gradient(#fff 0 0);
+	  -webkit-mask-composite: destination-out; 
+	  mask-composite: exclude; 
+}
+
+.img-auth {
+	width: 72px;
+	height: 72px;
+	border-radius: 100%;
+}
+
+#create-post .card {
+
+}
+
+.trim-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
