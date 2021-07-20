@@ -24,12 +24,21 @@ class DiaryController extends Controller
     	// dd($request);
     	//validator
     	$validator = Validator::make($request->all(), [
+    		'story' => 'required',
     		'content' => 'required',
     	]);
 
     	if ($validator->fails())
 	    {
-	        dd('error');
+	       return response()->json(['errors'=>$validator->errors()->all()]);
+	    }
+	    else
+	    {
+	    	DB::table('diaries')->insert([
+        		'story' => $request->story,
+        		'content' => $request->content
+        	]);
+        	return response()->json(['success'=>'Data is successfully added']);
 	    }
 
     }

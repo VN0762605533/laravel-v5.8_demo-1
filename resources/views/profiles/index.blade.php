@@ -2,6 +2,7 @@
 
 @push('styles')
 	<link rel="stylesheet" href="{{ asset('css/profile.css') }}">
+	<meta name="_token" content="{{csrf_token()}}" />
 @endpush
 
 @section('content')
@@ -68,7 +69,7 @@
 				<!-- button create diary -->
 				<div id="create-diary" class="container mt-5 d-flex justify-content-center">
 					<!-- <c class="btn btn-sm btn-outline-primary" style="width: 400px">Create diary</button>  -->
-					<button class="custom-btn btn-2" href="{{ url('/') }}"><i class="fas fa-plus"></i> &nbsp; Create diary</button>
+					<button type="button" class="custom-btn btn-2" data-toggle="modal" data-target="#myModal"><i class="fas fa-plus"></i> &nbsp; Create diary</button>
 				</div>
 			</div>
 			<!--  -->
@@ -149,6 +150,71 @@
 					<div class="option-item"><i class="fas fa-portrait"></i></div>
 				</div>
 			</div>
+
+			<!-- The Modal -->
+			  <div class="modal fade" id="myModal">
+			    <div class="modal-dialog modal-lg">
+			      <div class="modal-content">
+			      
+			        <!-- Modal Header -->
+			        <div class="modal-header">
+			          <h4 class="modal-title">Create diary</h4>
+			          <button type="button" class="close" data-dismiss="modal">&times;</button>
+			        </div>
+			        
+			        <!-- Modal body -->
+
+		        	<!-- code form here -->
+		        	<form action="{{ url('/stories/stored') }}" method="post">
+		        		@csrf
+			        <div class="modal-body">
+						<div>
+							<div class="tab-content" id="pills-tabContent">
+							  <div class="tab-pane fade show active" id="pills-your-story" role="tabpanel" aria-labelledby="pills-story-tab">
+							  	<div class="form-group">
+								    <label for="story">Title story:</label>
+								    <input type="text" class="form-control" id="story" placeholder="title ....">
+								</div>
+							  	<div class="form-group">
+							  		<label for="task-content-story">content story:</label>
+									<textarea name="content" cols="40" rows="5" class="form-control" id="task-content-story" placeholder="content ....">{!! old('content', 'test editor content') !!}</textarea>
+								</div>
+								
+							  </div>
+							  <div class="tab-pane fade" id="pills-images" role="tabpanel" aria-labelledby="pills-images-tab">
+							  	<div class="custom-file">
+								  <input type="file" class="custom-file-input" id="storyFile">
+								  <label class="custom-file-label" for="storyFile">Choose file</label>
+								</div>
+							  </div>
+							</div>
+						</div>
+			        </div>
+			        	
+			        <!-- Modal footer -->
+			        <div class="modal-footer d-flex justify-content-between align-items-center">
+			        	<ul class="nav nav-pills" id="pills-tab" role="tablist">
+							  <li class="nav-item" role="presentation">
+							    <a class="nav-link active" id="pills-story-tab" data-toggle="pill" href="#pills-your-story" role="tab" aria-controls="pills-home" aria-selected="true"><i class="far fa-newspaper"></i> &nbsp; your story</a></a>
+							  </li>
+							  <li class="nav-item" role="presentation">
+							    <a class="nav-link" id="pills-images-tab" data-toggle="pill" href="#pills-images" role="tab" aria-controls="pills-profile" aria-selected="false"><i class="far fa-images"></i> &nbsp; image</a>
+							  </li>
+						</ul>
+						<ul class="nav">
+							<li class="nav-item">
+								<!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+							</li>
+							<li class="nav-item">
+								<button class="btn btn-danger" type="submit" id="ajaxSubmit"><i class="fas fa-file-import"></i> &nbsp; post</button>
+							</li>
+						</ul>
+			        </div>
+		          	</form>
+
+			      </div>
+			    </div>
+			  </div>
 		</div>
 	</div>
 
@@ -156,4 +222,47 @@
 @endsection
 
 @push('scripts')
+	<script>
+		CKEDITOR.replace('task-content-story', options);
+  	</script>
+  	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  	<script>
+  		$( document ).ready(function() {
+            $('#ajaxSubmit').click(function(e){
+               	e.preventDefault();
+               	$.ajaxSetup({
+	                headers: {
+	                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+	                }
+              	});
+            	$.ajax({
+		            type        :   'POST',
+		            url         :   "{{ url('/stories/stored') }}",
+		            data        :   {
+		                story: $('#story').val(),
+                     	content: $('#task-content-story').val()
+		            },
+           			success: function(res) {
+           			 	if(res.errors)
+	                  	{
+	                  		console.log('error');
+	                  		// jQuery('.alert-danger').html('');
+
+	                  		// jQuery.each(result.errors, function(key, value){
+	                  		// 	jQuery('.alert-danger').show();
+	                  		// 	jQuery('.alert-danger').append('<li>'+value+'</li>');
+	                  		// });
+	                  	}
+	                  	else
+	                  	{
+	                  		console.log('success');
+	                  		// jQuery('.alert-danger').hide();
+	                  		// $('#open').hide();
+	                  		$('#myModal').modal('hide');
+	                  	}
+           			}
+	            });
+            });
+        });
+      </script>
 @endpush
