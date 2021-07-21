@@ -71,43 +71,9 @@
 					<!-- <c class="btn btn-sm btn-outline-primary" style="width: 400px">Create diary</button>  -->
 					<button type="button" class="custom-btn btn-2" data-toggle="modal" data-target="#myModal"><i class="fas fa-plus"></i> &nbsp; Create diary</button>
 				</div>
+
 			</div>
-			<!--  -->
-			<!-- <div class="col-md-8">
-				<div id="profile-content">
-					<div class="container mt-5 d-flex justify-content-center">
-					    <div class="card p-3">
-					        <div class="panel">
-							  	<div class="panel-body bio-graph-info">
-							     	<h3></h3>
-							      	<div class="row">
-							          	<table class="table table-bordered">
-										  <thead class="table-light">
-										    <tr>
-										    	<th class="stats">Title</th>
-										    	<th class="text-right"></th>
-										    </tr>
-										  </thead>
-										  <tbody>
-										  	@foreach($dataInfo as $data)
-										    <tr>
-												<td class="stats">Fullname:</td>
-												<td class="text-right"><input type="text" class="text-right border-0" value="{{ $data->name }}"></td>
-										    </tr>
-										    <tr>
-												<td class="stats">Email</td>
-												<td class="text-right"><input type="text" class="text-right border-0" value="{{ $data->email }}"></td>
-										    </tr>
-											@endforeach 
-										  </tbody>
-										</table>
-							      	</div>
-							  	</div>
-							</div>
-					    </div>
-					</div>
-				</div>
-			</div> -->
+			
 			<div class="col-md-7">
 				<div class="posts-container mt-5">
 					<div class="row image-container d-flex">
@@ -165,7 +131,7 @@
 			        <!-- Modal body -->
 
 		        	<!-- code form here -->
-		        	<form action="{{ url('/stories/stored') }}" method="post">
+		        	<form action="{{ url('/stories/stored') }}" method="post" enctype="multipart/form-data" id="laravel-ajax-file-upload">
 		        		@csrf
 			        <div class="modal-body">
 						<div>
@@ -173,19 +139,18 @@
 							  <div class="tab-pane fade show active" id="pills-your-story" role="tabpanel" aria-labelledby="pills-story-tab">
 							  	<div class="form-group">
 								    <label for="story">Title story:</label>
-								    <input type="text" class="form-control" id="story" placeholder="title ....">
+								    <input type="text" class="form-control" name="story" id="story" placeholder="title ....">
+								    <span class="text-danger d-none" id="error-story"></span>
 								</div>
 							  	<div class="form-group">
 							  		<label for="task-content-story">content story:</label>
 									<textarea name="content" cols="40" rows="5" class="form-control" id="task-content-story" placeholder="content ....">{!! old('content', 'test editor content') !!}</textarea>
+									<span class="text-danger d-none" id="error-story"></span>
 								</div>
-								
 							  </div>
 							  <div class="tab-pane fade" id="pills-images" role="tabpanel" aria-labelledby="pills-images-tab">
-							  	<div class="custom-file">
-								  <input type="file" class="custom-file-input" id="storyFile">
-								  <label class="custom-file-label" for="storyFile">Choose file</label>
-								</div>
+								  <input type="file" name="storyFile" class="form-control" id="storyFile">
+								  <span class="text-danger d-none" id="error-storyFile"></span>
 							  </div>
 							</div>
 						</div>
@@ -215,6 +180,7 @@
 			      </div>
 			    </div>
 			  </div>
+
 		</div>
 	</div>
 
@@ -228,41 +194,65 @@
   	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   	<script>
   		$( document ).ready(function() {
+            
+            // $('#ajaxSubmitImages').click(function(e){
             $('#ajaxSubmit').click(function(e){
-               	e.preventDefault();
-               	$.ajaxSetup({
-	                headers: {
-	                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-	                }
-              	});
-            	$.ajax({
-		            type        :   'POST',
-		            url         :   "{{ url('/stories/stored') }}",
-		            data        :   {
-		                story: $('#story').val(),
-                     	content: $('#task-content-story').val()
-		            },
-           			success: function(res) {
-           			 	if(res.errors)
-	                  	{
-	                  		console.log('error');
-	                  		// jQuery('.alert-danger').html('');
-
-	                  		// jQuery.each(result.errors, function(key, value){
-	                  		// 	jQuery('.alert-danger').show();
-	                  		// 	jQuery('.alert-danger').append('<li>'+value+'</li>');
-	                  		// });
-	                  	}
-	                  	else
-	                  	{
-	                  		console.log('success');
-	                  		// jQuery('.alert-danger').hide();
-	                  		// $('#open').hide();
-	                  		$('#myModal').modal('hide');
-	                  	}
-           			}
-	            });
+				$(this).parents("form").ajaxForm(options);
             });
+
+            var options = { 
+			    complete: function(response) 
+			    {
+			    	if (response.errors) {
+			    		console.log('error');
+                  		$('#story').addClass('error');
+                  		// res.errors.forEach(error =>
+                  			// $('#error-story').append('<li>'+ error +'</li>')
+                  		// );
+                  		for (var key in res.errors) {
+						    // skip loop if the property is from prototype
+						    if (!res.errors.hasOwnProperty(key)) continue;
+
+						    var obj =  res.errors[key];
+						    for (var prop in obj) {
+						        // skip loop if the property is from prototype
+						        if (!obj.hasOwnProperty(prop)) continue;
+
+						        // your code
+						        if (key == 'story')
+						        {
+						        	$('#error-story').append('<li>'+ obj[prop] +'</li>')
+						        }
+						        else if(key == 'storyFile')
+						        {
+						        	$('#error-storyFile').append('<li>'+ obj[prop] +'</li>')
+						        }
+						        // alert(prop + " = " + obj[prop]);
+						    }
+						}
+                  		$('#error-story').removeClass('d-none');
+			    	}
+			    	else
+			    	{
+			    		console.log('success');
+                  		$('#story').removeClass('error');
+                  		$('#error-story').addClass('d-none');
+                  		// jQuery('.alert-danger').hide();
+                  		// $('#open').hide();
+                  		// $('#myModal').modal('hide');
+                  		$('.close').click();
+			    	}
+			    }
+			  };
+
+
+			 //  function printErrorMsg (msg) {
+				// $(".print-error-msg").find("ul").html('');
+				// $(".print-error-msg").css('display','block');
+				// $.each( msg, function( key, value ) {
+				// 	$(".print-error-msg").find("ul").append('<li>'+value+'</li>');
+				// });
+			 //  }
         });
       </script>
 @endpush

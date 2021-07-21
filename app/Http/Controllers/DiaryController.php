@@ -19,26 +19,54 @@ class DiaryController extends Controller
 
     //
     public function stored(Request $request)
-    {
+    {	
+    	// dd($request->file('files'));
     	// dd('stored');
     	// dd($request);
     	//validator
     	$validator = Validator::make($request->all(), [
     		'story' => 'required',
     		'content' => 'required',
+    		'storyFile'	=> 'required|image|mimes:jpeg,png,jpg,gif,svg',
     	]);
 
     	if ($validator->fails())
 	    {
-	       return response()->json(['errors'=>$validator->errors()->all()]);
+	       return response()->json(['errors'=>$validator->errors()]);
 	    }
 	    else
 	    {
-	    	DB::table('diaries')->insert([
-        		'story' => $request->story,
-        		'content' => $request->content
-        	]);
-        	return response()->json(['success'=>'Data is successfully added']);
+	    	if ($files = $request->file('storyFile')) {
+	    		$input = $request->all();
+	    		$image = $request->file('storyFile');
+	    		// dd($request->file('storyFile')->hashName());
+	    		$imageName = $request->file('storyFile')->hashName();
+	    		
+             
+	            //store file into document folder
+	            if ($image->move(public_path('photos/images'), $imageName)) {
+	            	# code...
+	            	DB::table('diaries')->insert([
+		        		'story' => $request->story,
+		        		'content' => $request->content
+		        	]);
+		        	$id = DB::getPdo()->lastInsertId();
+		        	if ($id) {
+		        		//store your file into database
+			            DB::table('images')->insert([
+			        		'name' => $imageName,
+			        		'idstory' => $id
+			        	]);
+			              
+			            // return response()->json(['success'=>'Data is successfully added']);
+			            return redirect('/profile');
+		        	}
+	            }
+	            else
+	            {
+	        		return response()->json(['errors'=>'Images error!!']);
+	            }
+	        }
 	    }
 
     }
