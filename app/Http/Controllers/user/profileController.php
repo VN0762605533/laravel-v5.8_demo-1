@@ -15,7 +15,18 @@ class profileController extends Controller
     	// dd('profile page');
     	$id = session('user_info')['id'];
     	$dataInfo = DB::table('users')->select('name', 'email')->where('id', $id)->get();
-    	return view('profiles.index', compact('dataInfo'));
+    	
+    	// section image story
+    	$dataImages = DB::table('diaries')
+    				 ->join('images', 'images.idstory', '=', 'diaries.id')
+    				 ->select('images.name', 'diaries.id')
+    				 ->where('diaries.status', 1)
+                     ->where('diaries.idUser', $id)
+    				 ->get();
+
+    	$checkImages = count($dataImages);
+
+    	return view('profiles.index', compact('dataInfo', 'dataImages', 'checkImages'));
     }
 
     //

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 class DiaryController extends Controller
 {
@@ -20,7 +21,7 @@ class DiaryController extends Controller
     //
     public function stored(Request $request)
     {	
-    	// dd($request->file('files'));
+    	$idUser = session('user_info')['id'];
     	// dd('stored');
     	// dd($request);
     	//validator
@@ -44,18 +45,23 @@ class DiaryController extends Controller
 	    		
              
 	            //store file into document folder
-	            if ($image->move(public_path('photos/images'), $imageName)) {
+	            if ($image->move(public_path('storage/images'), $imageName)) {
 	            	# code...
 	            	DB::table('diaries')->insert([
+	            		'idUser' => $idUser,
 		        		'story' => $request->story,
-		        		'content' => $request->content
+		        		'content' => $request->content,
+		        		'created_at'=> Carbon::now(),
+		        		'updated_at'=> Carbon::now(),
 		        	]);
 		        	$id = DB::getPdo()->lastInsertId();
 		        	if ($id) {
 		        		//store your file into database
 			            DB::table('images')->insert([
 			        		'name' => $imageName,
-			        		'idstory' => $id
+			        		'idstory' => $id,
+			        		'created_at'=> Carbon::now(),
+			        		'updated_at'=> Carbon::now(),
 			        	]);
 			              
 			            // return response()->json(['success'=>'Data is successfully added']);
@@ -69,5 +75,27 @@ class DiaryController extends Controller
 	        }
 	    }
 
+    }
+
+    //
+    public function show($id)
+    {
+    	$idUser = session('user_info')['id'];
+    	$dataDetail = DB::table('diaries')
+    				->select('diaries.story', 'diaries.content', 'images.name')
+    				->join('images', 'images.idstory', '=', 'diaries.id')
+    				->where('diaries.status', 1)
+    				->where('diaries.idUser', $idUser)
+    				->where('diaries.id', $id)
+    				->get();
+
+    	if($dataDetail)
+    	{
+	    	return response()->json(['success'=>$dataDetail]);
+    	}
+    	else
+    	{
+    		return response()->json(['errors'=>'No data']);
+    	}
     }
 }
