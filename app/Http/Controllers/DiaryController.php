@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Carbon\Carbon;
 
 class DiaryController extends Controller
 {
@@ -21,7 +20,7 @@ class DiaryController extends Controller
     //
     public function stored(Request $request)
     {	
-    	$idUser = session('user_info')['id'];
+    	// dd($request->file('files'));
     	// dd('stored');
     	// dd($request);
     	//validator
@@ -48,20 +47,15 @@ class DiaryController extends Controller
 	            if ($image->move(public_path('photos/images'), $imageName)) {
 	            	# code...
 	            	DB::table('diaries')->insert([
-	            		'idUser' => $idUser,
 		        		'story' => $request->story,
-		        		'content' => $request->content,
-		        		'created_at'=> Carbon::now(),
-		        		'updated_at'=> Carbon::now(),
+		        		'content' => $request->content
 		        	]);
 		        	$id = DB::getPdo()->lastInsertId();
 		        	if ($id) {
 		        		//store your file into database
 			            DB::table('images')->insert([
 			        		'name' => $imageName,
-			        		'idstory' => $id,
-			        		'created_at'=> Carbon::now(),
-			        		'updated_at'=> Carbon::now(),
+			        		'idstory' => $id
 			        	]);
 			              
 			            // return response()->json(['success'=>'Data is successfully added']);
@@ -75,25 +69,5 @@ class DiaryController extends Controller
 	        }
 	    }
 
-    }
-
-    //
-    public function show($id)
-    {
-    	$dataDetail = DB::table('diaries')
-    				->select('diaries.story', 'diaries.content', 'images.name')
-    				->join('images', 'images.idstory', '=', 'diaries.id')
-    				->where('diaries.status', 1)
-    				->where('diaries.idUser', $id)
-    				->get();
-    
-    	if($dataDetail)
-    	{
-	    	return response()->json(['success'=>$dataDetail]);
-    	}
-    	else
-    	{
-    		return response()->json(['errors'=>'No data']);
-    	}
     }
 }
