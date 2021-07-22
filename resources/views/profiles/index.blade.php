@@ -77,7 +77,20 @@
 			<div class="col-md-7">
 				<div class="posts-container mt-5">
 					<div class="row image-container d-flex">
-						<div class="col-md-4 d-pr-pl">
+						@if($checkImages)
+							@foreach($dataImages as $dataImage)
+								@if (file_exists( 'photos/images/' . $dataImage->name))
+								<div class="col-md-4 d-pr-pl">
+									<a href="javascript:void()" data-toggle="modal" data-target="#modalStory" >
+										<img class="image-story openStory" data-idstory="{{ $dataImage->id }}" src="photos/images/{{ $dataImage->name }}" alt="">
+									</a>
+								</div>
+								@endif
+							@endforeach
+						@else
+							<p class="text-center w-100">There is no story here</p>
+						@endif
+						<!-- <div class="col-md-4 d-pr-pl">
 							<img class="image-story" src="https://i.picsum.photos/id/604/200/200.jpg?hmac=qgFjxODI1hMBMfHo68VvLeji-zvG9y-iPYhyW0EkvOs" alt="">
 						</div>
 						<div class="col-md-4  d-pr-pl">
@@ -103,7 +116,7 @@
 						</div>
 						<div class="col-md-4  d-pr-pl">
 							<img class="image-story" src="https://i.picsum.photos/id/553/200/200.jpg?hmac=HSLKzqqoxnajv4KjLxYSjZokWcuCCiZLGdRPUoryhXk" alt="">
-						</div>
+						</div> -->
 					</div>
 				</div>
 			</div>
@@ -135,6 +148,9 @@
 		        		@csrf
 			        <div class="modal-body">
 						<div>
+							<div>
+								<span id="image-input-error" class="text-danger"></span>
+							</div>
 							<div class="tab-content" id="pills-tabContent">
 							  <div class="tab-pane fade show active" id="pills-your-story" role="tabpanel" aria-labelledby="pills-story-tab">
 							  	<div class="form-group">
@@ -181,6 +197,40 @@
 			    </div>
 			  </div>
 
+			<!-- Modal display story -->
+			<div class="modal fade" id="modalStory">
+				<div class="modal-dialog modal-lg">
+			      <div class="modal-content">
+			      
+			        <!-- Modal body -->
+			        <div class="modal-body">
+						<div>
+							<div>
+								<span id="image-input-error" class="text-danger"></span>
+							</div>
+							<div class="tab-content" id="pills-tabContent">
+							  <div class="tab-pane fade show active d-flex" id="pills-your-story" role="tabpanel" aria-labelledby="pills-story-tab">
+							  	<div class="imageStory">
+							  		<img src="" alt="" class="imageStory">
+							  	</div>
+							  	<div class="detailContent ml-2">
+							  		<h4 class="story-title"></h4>
+							  		<div class='story-content'>
+							  			
+							  		</div>
+							  	</div>
+							  </div>
+							  <div class="tab-pane fade" id="pills-images" role="tabpanel" aria-labelledby="pills-images-tab">
+								  ...
+							  </div>
+							</div>
+						</div>
+			        </div>
+			        	
+			      </div>
+			    </div>
+			</div>
+
 		</div>
 	</div>
 
@@ -194,65 +244,106 @@
   	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   	<script>
   		$( document ).ready(function() {
-            
-            // $('#ajaxSubmitImages').click(function(e){
-            $('#ajaxSubmit').click(function(e){
-				$(this).parents("form").ajaxForm(options);
-            });
 
-            var options = { 
-			    complete: function(response) 
-			    {
-			    	if (response.errors) {
-			    		console.log('error');
-                  		$('#story').addClass('error');
-                  		// res.errors.forEach(error =>
-                  			// $('#error-story').append('<li>'+ error +'</li>')
-                  		// );
-                  		for (var key in res.errors) {
-						    // skip loop if the property is from prototype
-						    if (!res.errors.hasOwnProperty(key)) continue;
+			$.ajaxSetup({
+		        headers: {
+		            'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+		        }
+		    });
 
-						    var obj =  res.errors[key];
-						    for (var prop in obj) {
-						        // skip loop if the property is from prototype
-						        if (!obj.hasOwnProperty(prop)) continue;
+		    $('#laravel-ajax-file-upload').submit(function(e) {
+		       	e.preventDefault();
+		       	let formData = new FormData(this);
+		       	$('#image-input-error').text('');
 
-						        // your code
-						        if (key == 'story')
-						        {
-						        	$('#error-story').append('<li>'+ obj[prop] +'</li>')
-						        }
-						        else if(key == 'storyFile')
-						        {
-						        	$('#error-storyFile').append('<li>'+ obj[prop] +'</li>')
-						        }
-						        // alert(prop + " = " + obj[prop]);
-						    }
-						}
-                  		$('#error-story').removeClass('d-none');
-			    	}
-			    	else
-			    	{
-			    		console.log('success');
-                  		$('#story').removeClass('error');
-                  		$('#error-story').addClass('d-none');
-                  		// jQuery('.alert-danger').hide();
-                  		// $('#open').hide();
-                  		// $('#myModal').modal('hide');
-                  		$('.close').click();
-			    	}
-			    }
-			  };
+		       	$.ajax({
+		          	type:'POST',
+		          	url: `{{url('/stories/stored')}}`,
+		           	data: formData,
+		           	contentType: false,
+		           	processData: false,
+		           	success: (response) => {
+		             	if (response) {
+		             		console.log(response);
+		             		if (response.errors) {
+		                  		$('#story').addClass('error');
 
+		                  		for (var key in response.errors) {
+								    // skip loop if the property is from prototype
+								    if (!response.errors.hasOwnProperty(key)) continue;
 
-			 //  function printErrorMsg (msg) {
-				// $(".print-error-msg").find("ul").html('');
-				// $(".print-error-msg").css('display','block');
-				// $.each( msg, function( key, value ) {
-				// 	$(".print-error-msg").find("ul").append('<li>'+value+'</li>');
-				// });
-			 //  }
+								    var obj =  response.errors[key];
+								    for (var prop in obj) {
+								        // skip loop if the property is from prototype
+								        if (!obj.hasOwnProperty(prop)) continue;
+
+								        // your code
+								        if (key == 'story')
+								        {
+								        	$('#error-story').append('<li>'+ obj[prop] +'</li>')
+								        }
+								        else if(key == 'storyFile')
+								        {
+								        	$('#error-storyFile').append('<li>'+ obj[prop] +'</li>');
+								        	$('#pills-story-tab').removeClass('active');
+								        	$('#pills-images-tab').addClass('active');
+								        	$('#pills-your-story').removeClass('active show');
+								        	$('#pills-images').addClass('active show');
+								        }
+								    }
+								}
+		                  		$('#error-story').removeClass('d-none');
+		                  		$('#error-storyFile').removeClass('d-none');
+		             		}
+		             		else
+		             		{
+		             			this.reset();
+		                  		$('#story').removeClass('error');
+		                  		$('#error-story').removeClass('error');
+		                  		$('#story').addClass('d-none');
+		                  		$('#error-story').addClass('d-none');
+		               			alert('Image has been uploaded successfully');
+		                  		$('.close').click();
+		             		}
+		               		
+		             	}
+		           	},
+		           	error: function(response){
+		              	console.log(response);
+		                	$('#image-input-error').text(response.responseJSON.errors.file);
+		           	}
+		       	});
+		  	});
+
+		  	//
+		  	$('.openStory').on('click', function()
+		  	{
+		  		console.log($(this).data('idstory'));
+		  		var idstory = $(this).data('idstory');
+		  		$.ajax({
+		  			type:'GET',
+		          	url: "/stories/show/"+idstory,
+		           	contentType: false,
+		           	processData: false,
+		           	success: (response) => {
+		           		if(response.errors)
+		           		{
+		           			console.log(response.errors);
+		           		}
+		           		else
+		           		{
+		           			console.log(response.success[0].name);
+		           			$('.imageStory').attr('src', '/photos/images/'+response.success[0].name);
+		           			$('.story-title').text(response.success[0].story);
+		           			$('.story-content').html(response.success[0].content);
+		           		}
+		           	},
+		           	error: function(response){
+		              	console.log(response);
+		                	// $('#image-input-error').text(response.responseJSON.errors.file);
+		           	}
+		  		})
+		  	})
         });
       </script>
 @endpush

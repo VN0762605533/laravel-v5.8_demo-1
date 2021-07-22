@@ -15,6 +15,7 @@ class CreateDiariesTable extends Migration
     {
         Schema::create('diaries', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->integer('idUser')->nullable();
             $table->string('story');
             $table->text('content')->nullable();
             $table->integer('mode')->default(1);

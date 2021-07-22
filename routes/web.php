@@ -43,6 +43,7 @@ ROUTE::get('/reset', function() {
 /*profile*/
 ROUTE::get('/profile', 'user\profileController@index')->middleware('checkLogin');
 ROUTE::post('/stories/stored', 'diaryController@stored');
+ROUTE::get('/stories/show/{id}', 'diaryController@show');
 
 /*end-profile*/
 /*--------------------stores------------------------*/
